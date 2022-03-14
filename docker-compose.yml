@@ -36,10 +36,11 @@ services:
 
   # NGINX
   web:
+    build: .
     image: nginx:1-alpine
     volumes:
       - ./config/nginx.conf:/etc/nginx/templates/default.conf.template
-      - ./web:/usr/share/nginx/html
+      - './university:/var/www/html'
     environment:
       - NGINX_HOST=${GITPOD_WORKSPACE_URL}
       - NGINX_PORT=80
@@ -47,8 +48,18 @@ services:
       - 8080:80
     networks:
       - local
+    
+  php:
+    image: php:fpm-alpine
+    networks:
+      - local
+    volumes:
+      - ./university:/var/www/html
+      - ./php.ini:/usr/local/etc/php/php.ini
 
 # Define networking
 networks:
   local:
     external: true
+
+  
