@@ -34,7 +34,7 @@
                   <td class="border border-slate-300">{{$row->country}}</td>
                   <td class="border border-slate-300">{{$row->alpha_two_code}}</td>
                   <td class="border border-slate-300"> 
-                    @if($row->multi == 1)
+                    @if($row->multi_domain == 1)
                     <?=$output = str_replace(',', '<br />', $row->domains)?>
                     @else
                     {{$row->domains}}
