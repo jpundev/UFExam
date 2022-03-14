@@ -7,8 +7,8 @@ use App\Models\TotalUni;
 class UniversityController extends Controller
 {
     function get(){
-        phpinfo();
-        $data = TotalUni::all();
+        //paginate the table
+        $data = TotalUni::paginate(25);
         return view('university',compact('data'));
     }
 }

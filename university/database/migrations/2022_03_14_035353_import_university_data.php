@@ -29,9 +29,11 @@ return new class extends Migration
             $table->string('alpha_two_code')->nullable();
             $table->string('domains')->nullable();
             $table->string('web_pages')->nullable();
-            $table->tinyInteger('multi')->nullable();
-        });
+            $table->tinyInteger('multi_domain')->nullable();
+            $table->tinyInteger('multi_page')->nullable();
 
+        });
+        //create University
         Schema::create('university', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
@@ -39,13 +41,13 @@ return new class extends Migration
             $table->string('country')->nullable();
             $table->string('alpha_two_code')->nullable();
         });
-
+        //create web_pages
         Schema::create('web_pages', function (Blueprint $table) {
             $table->id();
             $table->integer('id_university')->nullable();
             $table->string('url')->nullable();
         });
-
+        //create domains
         Schema::create('domains', function (Blueprint $table) {
             $table->id();
             $table->integer('id_university')->nullable();
@@ -78,16 +80,7 @@ return new class extends Migration
                         'name' => $row['name'],
                         'state_province' => $row['state-province']
                         ]);
-                    
-                        //If web_pages isnt empty
-                        if ($row['web_pages']){
-                            foreach($row['web_pages'] as $pages){
-                                Pages::create([
-                                    'id_university' => $university->id,
-                                    'url' => $pages
-                                ]);
-                            }
-                        }
+                        //Insert all data into TotalUni
                         $total = TotalUni::create([
                             'country' => $row['country'],
                             'alpha_two_code' => $row['alpha_two_code'],
@@ -99,14 +92,30 @@ return new class extends Migration
 
                         //If Domains isnt empty
                         if ($row['domains']){
+                            //multiple domains
                             if(count($row['domains'])>1){
-                                $total->multi = 1;
+                                $total->multi_domain = 1;
                                 $total->save();
                             }
                             foreach($row['domains'] as $domain){
                                 Domains::create([
                                     'id_university' => $university->id,
                                     'domain_name' => $domain
+                                ]);
+                            }
+                        }
+
+                        //If web_pages isnt empty
+                        if ($row['web_pages']){
+                            //multiple pages
+                            if(count($row['web_pages'])>1){
+                                $total->multi_page = 1;
+                                $total->save();
+                            }
+                            foreach($row['web_pages'] as $pages){
+                                Pages::create([
+                                    'id_university' => $university->id,
+                                    'url' => $pages
                                 ]);
                             }
                         }
@@ -127,9 +136,9 @@ return new class extends Migration
     public function down()
     {
         //On revert delete all data to restore back to empty states.
-        Universities::truncate();
-        Domains::truncate();
-        Pages::truncate();
+        Schema::dropIfExists('university');
+        Schema::dropIfExists('domains');
+        Schema::dropIfExists('web_pages');
         Schema::dropIfExists('total_uni');
     }
 };
