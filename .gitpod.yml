@@ -46,7 +46,7 @@ ports:
   - port: 8080
     onOpen: ignore
   - port: 9080
-    onOpen: open-preview
+    onOpen: ignore
   # Adminer
   - port: 8033
     onOpen: notify

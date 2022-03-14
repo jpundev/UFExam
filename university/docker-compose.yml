@@ -30,7 +30,7 @@ services:
             - '/dev/shm:/dev/shm'
         networks:
             - sail
-            - local
+            - local       
 networks:
     local:
         external: true
